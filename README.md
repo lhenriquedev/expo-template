@@ -14,7 +14,7 @@ A modern and feature-rich template for building React Native applications using 
 - [Expo](https://expo.dev/)
 - [Expo Router](https://docs.expo.dev/routing/introduction/)
 - [Clerk](https://clerk.com/)
-- [React Native Bottom Tabs](https://reactnavigation.org/docs/bottom-tab-navigator/)
+- [React Native Bottom Tabs](https://github.com/callstackincubator/react-native-bottom-tabs)
 - TypeScript
 
 ## 🛠️ Getting Started
