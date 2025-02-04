@@ -2,23 +2,29 @@ import "../global.css";
 
 import { Slot, useRouter, useSegments } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import { Suspense, useEffect } from "react";
+import { useEffect } from "react";
 import "react-native-reanimated";
 
 
 import { ClerkLoaded, ClerkProvider, useAuth } from "@clerk/clerk-expo";
 import { tokenCache } from "@/lib/cache";
 
-import { ActivityIndicator } from "react-native";
+
+import { QueryClientProvider } from "@tanstack/react-query";
+import { queryClient } from "@/lib/query-client";
+import * as Sentry from '@sentry/react-native';
+
+Sentry.init({
+  dsn: 'https://db6a95c2a02c3220901552ae478d8bf1@o4508761356763136.ingest.us.sentry.io/4508761362071552',
+
+  // uncomment the line below to enable Spotlight (https://spotlightjs.com)
+  // spotlight: __DEV__,
+});
 
 const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!;
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
-
-function Loading() {
-  return <ActivityIndicator size="large" color="#000" />;
-}
 
 const InitialLayout = () => {
   const { isLoaded, isSignedIn } = useAuth();
@@ -42,6 +48,11 @@ const InitialLayout = () => {
   return <Slot />;
 };
 
+
+if (__DEV__) {
+  require('@/lib/reactotron');
+}
+
 const RootLayoutNav = () => {
   if (!publishableKey) {
     throw new Error("Add EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY in your .env");
@@ -50,9 +61,9 @@ const RootLayoutNav = () => {
   return (
     <ClerkProvider tokenCache={tokenCache} publishableKey={publishableKey}>
       <ClerkLoaded>
-    
+        <QueryClientProvider client={queryClient}>
           <InitialLayout />
- 
+        </QueryClientProvider>
       </ClerkLoaded>
     </ClerkProvider>
   );
